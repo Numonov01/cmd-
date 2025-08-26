@@ -8,7 +8,6 @@ import {
   OrderedListOutlined,
   PieChartOutlined,
   PlusCircleOutlined,
-  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -25,7 +24,8 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem(<Link to={"/map"}>Map</Link>, "1", <HeatMapOutlined />),
+  // getItem(<Link to={"/map"}>Map</Link>, "1", <HeatMapOutlined />),
+  getItem(<Link to={"/ipaddress"}>Map</Link>, "2", <HeatMapOutlined />),
   getItem(
     <Link to={"/applications"}>Applications</Link>,
     "6",
@@ -46,15 +46,15 @@ const items = [
       <PlusCircleOutlined />
     ),
   ]),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem(<Link to={"/user/Tom"}>Tom</Link>, "3"),
-    getItem(<Link to={"/user/Bill"}>Bill</Link>, "4"),
-    getItem(<Link to={"/user/Alex"}>Alex</Link>, "5"),
-  ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem(<Link to={"/TeamOne"}>TeamOne</Link>, "6"),
-    getItem(<Link to={"/TeamTwo"}>TeamTwo</Link>, "8"),
-  ]),
+  // getItem("User", "sub1", <UserOutlined />, [
+  //   getItem(<Link to={"/user/Tom"}>Tom</Link>, "3"),
+  //   getItem(<Link to={"/user/Bill"}>Bill</Link>, "4"),
+  //   getItem(<Link to={"/user/Alex"}>Alex</Link>, "5"),
+  // ]),
+  // getItem("Team", "sub2", <TeamOutlined />, [
+  //   getItem(<Link to={"/TeamOne"}>TeamOne</Link>, "6"),
+  //   getItem(<Link to={"/TeamTwo"}>TeamTwo</Link>, "8"),
+  // ]),
   getItem(<Link to={"/Files"}>Files</Link>, "9", <FileOutlined />),
 ];
 

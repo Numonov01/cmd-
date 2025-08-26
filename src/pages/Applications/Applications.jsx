@@ -1,28 +1,31 @@
 // src/pages/Applications/Applications.jsx
-import { Table, Card, Button, Tag, Spin, Alert, Tooltip } from "antd";
+import { Table, Card, Button, Tag, Spin, Alert, Tooltip, Select } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import useApplications from "../../service/Applications";
+import { useState, useEffect } from "react";
+import useHostDevices from "../../service/HostDevices";
 
 const Applications = () => {
   const { id } = useParams();
+  const [selectedDevice, setSelectedDevice] = useState(id || null);
+
+  // device bo‘yicha applications chaqiramiz
   const { apps, loading, error, pagination, refresh, fetchPage } =
-    useApplications();
+    useApplications(selectedDevice);
+
+  const { devices } = useHostDevices();
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "running":
-        return "green";
-      case "stopped":
-        return "red";
-      default:
-        return "default";
+  useEffect(() => {
+    // agar url'dan id kelsa, selectda avtomatik tanlab qo‘yiladi
+    if (id) {
+      setSelectedDevice(id);
     }
-  };
+  }, [id]);
 
   const columns = [
     {
@@ -31,15 +34,6 @@ const Applications = () => {
       width: 60,
       render: (_, __, index) => (pagination.currentPage - 1) * 10 + index + 1,
     },
-    // {
-    //   title: "ID",
-    //   dataIndex: "id",
-    //   key: "id",
-    //   width: 100,
-    //   render: (id) => (
-    //     <span className="monospace">{id.substring(0, 8)}...</span>
-    //   ),
-    // },
     {
       title: "Name",
       dataIndex: "name",
@@ -60,27 +54,17 @@ const Applications = () => {
       dataIndex: "pid",
       key: "pid",
     },
-
     {
-      title: "Hash",
-      dataIndex: "hash",
-      key: "hash",
-      render: (id) => (
-        <Tooltip title={id}>
-          <span className="monospace">{id.substring(0, 10)}...</span>
-        </Tooltip>
-      ),
+      title: "Sent",
+      dataIndex: "sent",
+      key: "sent",
+      render: (sent) => (sent / 1024).toFixed(2) + " KB",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
-    },
-    {
-      title: "Host",
-      dataIndex: "host",
-      key: "host",
+      title: "Received",
+      dataIndex: "received",
+      key: "received",
+      render: (received) => (received / 1024).toFixed(2) + " KB",
     },
     {
       title: "Created At",
@@ -88,12 +72,6 @@ const Applications = () => {
       key: "created_at",
       render: (date) => formatDate(date),
     },
-    // {
-    //   title: "Updated At",
-    //   dataIndex: "updated_at",
-    //   key: "updated_at",
-    //   render: (date) => formatDate(date),
-    // },
   ];
 
   return (
@@ -101,28 +79,42 @@ const Applications = () => {
       <Card
         title={
           <div style={{ display: "flex", alignItems: "center" }}>
-            <span>Firewall Rules</span>
-            {id && (
+            <span>Applications </span>
+            {selectedDevice && (
               <Tag color="purple" style={{ marginLeft: "10px" }}>
-                Device: {id}
+                Device: {selectedDevice}
               </Tag>
             )}
           </div>
         }
         extra={
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={refresh}
-            disabled={loading}
-            type="primary"
-          >
-            Refresh
-          </Button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Select
+              placeholder="Select a device"
+              style={{ width: 200 }}
+              allowClear
+              onChange={(value) => {
+                setSelectedDevice(value);
+              }}
+              value={selectedDevice}
+            >
+              {devices.map((device) => (
+                <Select.Option key={device.id} value={device.id}>
+                  {device.name || device.id}
+                </Select.Option>
+              ))}
+            </Select>
+
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={() => refresh(selectedDevice)}
+              disabled={loading}
+              type="primary"
+            >
+              Refresh
+            </Button>
+          </div>
         }
-        style={{
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          borderRadius: "8px",
-        }}
       >
         {error && (
           <Alert
@@ -142,7 +134,7 @@ const Applications = () => {
           }}
         >
           <Button
-            onClick={() => fetchPage(pagination.previous)}
+            onClick={() => fetchPage(pagination.previous, selectedDevice)}
             disabled={!pagination.previous || loading}
           >
             Previous
@@ -151,7 +143,7 @@ const Applications = () => {
             Page {pagination.currentPage} of {Math.ceil(pagination.count / 10)}
           </span>
           <Button
-            onClick={() => fetchPage(pagination.next)}
+            onClick={() => fetchPage(pagination.next, selectedDevice)}
             disabled={!pagination.next || loading}
           >
             Next
@@ -164,11 +156,6 @@ const Applications = () => {
             dataSource={apps.map((item) => ({ ...item, key: item.id }))}
             pagination={false}
             scroll={{ x: 1000 }}
-            style={{
-              borderRadius: "8px",
-              overflow: "hidden",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.09)",
-            }}
           />
         </Spin>
 

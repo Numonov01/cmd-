@@ -1,21 +1,37 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import DeckGL from "@deck.gl/react";
 import { Map } from "react-map-gl/maplibre";
 import { ArcLayer } from "@deck.gl/layers";
-import { Spin, Alert, Card, List, Typography, Divider } from "antd";
+import { Spin, Alert, Card, List, Typography, Divider, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import useConnectionMap from "../../service/Map";
+import useHostDevices from "../../service/HostDevices";
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
 function CustomMap() {
   const { maps, loading, error } = useConnectionMap();
+  const { devices, loading: devicesLoading } = useHostDevices();
   const [selectedConnection, setSelectedConnection] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [filteredMaps, setFilteredMaps] = useState([]);
+
+  // Filter connections based on selected device
+  useEffect(() => {
+    if (!selectedDevice) {
+      setFilteredMaps(maps || []);
+    } else {
+      const filtered = (maps || []).filter(
+        (connection) => connection.device_bios_uuid === selectedDevice
+      );
+      setFilteredMaps(filtered);
+    }
+  }, [maps, selectedDevice]);
 
   // Xarita markazlash
   const viewState = useMemo(() => {
-    const coords = (maps || [])
+    const coords = filteredMaps
       .flatMap((d) => [d.more_info?.local_address, d.more_info?.remote_address])
       .filter((loc) => loc && loc.latitude && loc.longitude);
 
@@ -41,11 +57,11 @@ function CustomMap() {
       pitch: 30,
       bearing: 0,
     };
-  }, [maps]);
+  }, [filteredMaps]);
 
   // Layerlar
   const layers = useMemo(() => {
-    const arcs = (maps || [])
+    const arcs = filteredMaps
       .filter(
         (d) =>
           d.more_info?.local_address &&
@@ -90,9 +106,9 @@ function CustomMap() {
         },
       }),
     ];
-  }, [maps, selectedConnection]);
+  }, [filteredMaps, selectedConnection]);
 
-  if (loading) {
+  if (loading || devicesLoading) {
     return (
       <div
         style={{
@@ -127,9 +143,27 @@ function CustomMap() {
         }}
       >
         <Typography.Title level={4}>Connections List</Typography.Title>
+
+        {/* Device Selection */}
+        <div style={{ marginBottom: 16 }}>
+          <Select
+            placeholder="Select a device"
+            style={{ width: "100%" }}
+            allowClear
+            onChange={(value) => setSelectedDevice(value)}
+            value={selectedDevice}
+          >
+            {devices.map((device) => (
+              <Select.Option key={device.bios_uuid} value={device.bios_uuid}>
+                {device.name || device.bios_uuid}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
+
         <List
           itemLayout="horizontal"
-          dataSource={maps || []}
+          dataSource={filteredMaps}
           renderItem={(item, index) => (
             <List.Item
               onClick={() => setSelectedConnection({ ...item, id: index })}
@@ -156,6 +190,12 @@ function CustomMap() {
                       <strong>To:</strong>{" "}
                       {item.more_info?.remote_address?.city || "Unknown"},{" "}
                       {item.more_info?.remote_address?.country || "Unknown"}
+                    </div>
+                    <div>
+                      <strong>Device:</strong>{" "}
+                      {devices.find(
+                        (d) => d.bios_uuid === item.device_bios_uuid
+                      )?.name || "Unknown"}
                     </div>
                   </>
                 }
@@ -202,6 +242,14 @@ function CustomMap() {
               />
             }
           >
+            {/* Device Info */}
+            <p>
+              <strong>Device:</strong>{" "}
+              {devices.find(
+                (d) => d.bios_uuid === selectedConnection.device_bios_uuid
+              )?.name || "Unknown"}
+            </p>
+
             {/* From */}
             <p>
               <strong>From:</strong>{" "}

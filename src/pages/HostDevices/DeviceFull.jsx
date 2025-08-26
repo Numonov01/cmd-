@@ -79,6 +79,11 @@ const DeviceFullInfo = () => {
     //   key: "id",
     // },
     {
+      title: "image_path",
+      dataIndex: "image_path",
+      key: "image_path",
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -92,11 +97,19 @@ const DeviceFullInfo = () => {
       title: "Sent",
       dataIndex: "sent",
       key: "sent",
+      render: (sent) => (sent / 1024).toFixed(2) + " KB",
     },
     {
       title: "Received",
       dataIndex: "received",
       key: "received",
+      render: (received) => (received / 1024).toFixed(2) + " KB",
+    },
+    {
+      title: "Created date",
+      dataIndex: "created_at",
+      key: "created_at",
+      render: (date) => formatDate(date),
     },
   ];
 

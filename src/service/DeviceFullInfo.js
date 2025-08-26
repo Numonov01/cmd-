@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useDeviceFullInfo = (deviceId) => {
   const [device, setDevice] = useState(null);
@@ -15,16 +16,11 @@ const useDeviceFullInfo = (deviceId) => {
       const apiUrl = `${
         import.meta.env.VITE_SERVER_URL
       }hosts/devices/${deviceId}/`;
-      const response = await fetch(apiUrl);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setDevice(data);
+      const response = await axios.get(apiUrl);
+      setDevice(response.data);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       console.error("Error fetching device details:", err);
     } finally {
       setLoading(false);

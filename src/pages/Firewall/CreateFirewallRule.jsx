@@ -54,14 +54,14 @@ const CreateFirewallRule = () => {
     fetchHosts();
   }, []);
 
-  // ko'p hashlardan bittasni chiqatish
+  // ko'p ImagePathlardan bittasni chiqatish
   const removeDuplicateApplications = (apps) => {
     const uniqueApps = [];
-    const seenHashes = new Set();
+    const seenImagePath = new Set();
 
     for (const app of apps) {
-      if (!seenHashes.has(app.hash)) {
-        seenHashes.add(app.hash);
+      if (!seenImagePath.has(app.image_path)) {
+        seenImagePath.add(app.image_path);
         uniqueApps.push(app);
       }
     }
@@ -106,7 +106,7 @@ const CreateFirewallRule = () => {
   const handleHostChange = (hostUuid) => {
     // Clear previous applications immediately
     setApplications([]);
-    form.setFieldsValue({ hash: null });
+    form.setFieldsValue({ image_path: null });
     setSelectedHost(hostUuid);
 
     if (hostUuid) {
@@ -127,7 +127,7 @@ const CreateFirewallRule = () => {
         title: values.title,
         description: values.description,
         host: values.host || null,
-        hash: values.hash || null,
+        application_id: values.image_path || null,
         port: values.port,
         protocol: values.protocol,
         direction: values.direction,
@@ -249,19 +249,19 @@ const CreateFirewallRule = () => {
 
               <Col xs={24} sm={12}>
                 <Form.Item
-                  label="Application"
-                  name="hash"
+                  label="Image path"
+                  name="image_path"
                   rules={[
                     {
                       required: false,
-                      message: "Please select an application hash",
+                      message: "Please select an image path",
                     },
                   ]}
                 >
                   <Select
                     placeholder={
                       selectedHost
-                        ? "Select an application"
+                        ? "Select an image path"
                         : "First select a host device"
                     }
                     allowClear
@@ -269,8 +269,8 @@ const CreateFirewallRule = () => {
                     disabled={!selectedHost}
                   >
                     {applications.map((app) => (
-                      <Option key={app.hash} value={app.hash}>
-                        {app.name || app.hash}
+                      <Option key={app.id} value={app.id}>
+                        {app.image_path || app.id}
                       </Option>
                     ))}
                     {selectedHost &&
@@ -352,8 +352,8 @@ const CreateFirewallRule = () => {
                   ]}
                 >
                   <Select placeholder="Select direction">
-                    <Option value="INBOUND">INBOUND</Option>
-                    <Option value="OUTBOUND">OUTBOUND</Option>
+                    <Option value="IN">Inbound</Option>
+                    <Option value="OUT">Outbound</Option>
                   </Select>
                 </Form.Item>
               </Col>

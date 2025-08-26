@@ -1,5 +1,6 @@
 // src/service/Logs.js
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useAgentLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -19,26 +20,22 @@ const useAgentLogs = () => {
 
       const apiUrl =
         url || `${import.meta.env.VITE_SERVER_URL}logs/agent-logs/`;
-      const response = await fetch(apiUrl);
+      const response = await axios.get(apiUrl);
+      const data = response.data;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setLogs(data.results);
+      setLogs(data.results || []);
       setPagination({
-        count: data.count,
-        next: data.next,
-        previous: data.previous,
+        count: data.count || data.results?.length || 0,
+        next: data.next || null,
+        previous: data.previous || null,
         currentPage: url
           ? url.includes("page=")
-            ? parseInt(url.match(/page=(\d+)/)[1])
+            ? parseInt(url.match(/page=(\d+)/)?.[1])
             : 1
           : 1,
       });
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       console.error("Error fetching agent logs:", err);
     } finally {
       setLoading(false);

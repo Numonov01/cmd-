@@ -9,14 +9,16 @@ import DeviceFullInfo from "../pages/HostDevices/DeviceFull";
 import AgentLogs from "../pages/Logs/Logs";
 import Applications from "../pages/Applications/Applications";
 import ApplicationConnections from "../pages/HostDevices/ApplicationConnections";
-import Map from "../pages/Map/Map";
 import CreateFirewallRule from "../pages/Firewall/CreateFirewallRule";
+import CustomMapIpAddress from "../pages/IpAddress/IpAddress";
+// import CustomMap from "../pages/Map/Map";
 
 function Router() {
   return (
     <Routes>
       <Route path="/user/:id" element={<Tom />} />
-      <Route path="/map" element={<Map />} />
+      {/* <Route path="/map" element={<CustomMap />} /> */}
+      <Route path="/ipaddress" element={<CustomMapIpAddress />} />
       <Route path="/firewall" element={<FireWall />} />
       <Route path="/firewall/create" element={<CreateFirewallRule />} />
       <Route path="/devices" element={<HostDevices />} />

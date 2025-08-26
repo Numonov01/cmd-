@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useApplicationConnections = (appId) => {
   const [connections, setConnections] = useState([]);
@@ -24,13 +25,9 @@ const useApplicationConnections = (appId) => {
           import.meta.env.VITE_SERVER_URL
         }applications/connections/?application=${appId}`;
 
-      const response = await fetch(apiUrl);
+      const response = await axios.get(apiUrl);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = response.data;
 
       if (data.results && Array.isArray(data.results)) {
         setConnections(data.results);
@@ -58,7 +55,7 @@ const useApplicationConnections = (appId) => {
         });
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       console.error("Error fetching application connections:", err);
     } finally {
       setLoading(false);

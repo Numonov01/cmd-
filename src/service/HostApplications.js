@@ -1,5 +1,6 @@
 // src/service/HostApplications.js
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useHostApplications = (deviceId) => {
   const [app, setApp] = useState(null);
@@ -16,16 +17,11 @@ const useHostApplications = (deviceId) => {
       const apiUrl = `${
         import.meta.env.VITE_SERVER_URL
       }applications/applications/?host=${deviceId}`;
-      const response = await fetch(apiUrl);
+      const response = await axios.get(apiUrl);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setApp(data);
+      setApp(response.data);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       console.error("Error fetching host applications:", err);
     } finally {
       setLoading(false);
