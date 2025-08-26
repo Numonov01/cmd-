@@ -1,7 +1,18 @@
-import { Table, Card, Button, Tag, Spin, Alert } from "antd";
+import {
+  Table,
+  Card,
+  Button,
+  Tag,
+  Spin,
+  Alert,
+  Descriptions,
+  Typography,
+} from "antd";
 import { ReloadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import useApplicationConnections from "../../service/ApplicationConnections";
+
+const { Text } = Typography;
 
 const ApplicationConnections = () => {
   const { id } = useParams();
@@ -24,20 +35,118 @@ const ApplicationConnections = () => {
     //   title: "ID",
     //   dataIndex: "id",
     //   key: "id",
+    //   width: 100,
+    //   render: (id) => (
+    //     <Text ellipsis={{ tooltip: id }}>{id.substring(0, 8)}...</Text>
+    //   ),
     // },
     {
-      title: "Local Address",
+      title: "Local address",
       dataIndex: "local_address",
       key: "local_address",
       render: (address) => address || "N/A",
     },
     {
-      title: "Remote Address",
+      title: "Remote address",
       dataIndex: "remote_address",
       key: "remote_address",
       render: (address) => address || "N/A",
     },
+    {
+      title: "Direction",
+      dataIndex: "direction",
+      key: "direction",
+      render: (direction) => (
+        <Tag color={direction === "Outbound" ? "blue" : "green"}>
+          {direction}
+        </Tag>
+      ),
+    },
+    {
+      title: "Application",
+      dataIndex: ["application", "name"],
+      key: "app_name",
+      render: (name) => name || "Unknown",
+    },
+    {
+      title: "Sent/Received",
+      key: "data",
+      render: (_, record) => (
+        <span>
+          {record.application?.sent || "0"} /{" "}
+          {record.application?.received || "0"}
+        </span>
+      ),
+    },
   ];
+
+  const expandedRowRender = (record) => {
+    return (
+      <div style={{ padding: "16px", background: "#f9f9f9" }}>
+        <Descriptions title="" bordered column={2} size="small">
+          <Descriptions.Item label="Connection id" span={2}>
+            {record.id}
+          </Descriptions.Item>
+          <Descriptions.Item label="Local address">
+            {record.local_address}
+          </Descriptions.Item>
+          <Descriptions.Item label="Remote address">
+            {record.remote_address}
+          </Descriptions.Item>
+          <Descriptions.Item label="Direction">
+            <Tag color={record.direction === "Outbound" ? "blue" : "green"}>
+              {record.direction}
+            </Tag>
+          </Descriptions.Item>
+
+          {record.application && (
+            <>
+              <Descriptions.Item label="Application name" span={2}>
+                {record.application.name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Application id">
+                {record.application.id}
+              </Descriptions.Item>
+              <Descriptions.Item label="Host">
+                {record.application.host}
+              </Descriptions.Item>
+              <Descriptions.Item label="IP address">
+                {record.application.ip_address}
+              </Descriptions.Item>
+              <Descriptions.Item label="PID">
+                {record.application.pid}
+              </Descriptions.Item>
+              <Descriptions.Item label="Image path">
+                <Text ellipsis={{ tooltip: record.application.image_path }}>
+                  {record.application.image_path}
+                </Text>
+              </Descriptions.Item>
+              <Descriptions.Item label="Created date">
+                {new Date(record.application.created_at).toLocaleString()}
+              </Descriptions.Item>
+              <Descriptions.Item label="Updated date">
+                {new Date(record.application.updated_at).toLocaleString()}
+              </Descriptions.Item>
+              <Descriptions.Item label="Data sent">
+                {record.application.sent} bytes
+              </Descriptions.Item>
+              <Descriptions.Item label="Data received">
+                {record.application.received} bytes
+              </Descriptions.Item>
+            </>
+          )}
+
+          <Descriptions.Item label="Additional info" span={2}>
+            <pre style={{ margin: 0, maxHeight: "200px", overflow: "auto" }}>
+              {record.more_info
+                ? JSON.stringify(record.more_info, null, 2)
+                : "No additional information available"}
+            </pre>
+          </Descriptions.Item>
+        </Descriptions>
+      </div>
+    );
+  };
 
   return (
     <div style={{ padding: "24px", background: "#f5f5f5", minHeight: "100vh" }}>
@@ -51,7 +160,7 @@ const ApplicationConnections = () => {
             >
               Back
             </Button>
-            <span>Application id:</span>
+            <span>Application connections</span>
             {id && (
               <Tag color="purple" style={{ marginLeft: "10px" }}>
                 {id}
@@ -119,29 +228,15 @@ const ApplicationConnections = () => {
               key: item.id || `connection-${index}`,
             }))}
             pagination={false}
-            scroll={{ x: 800 }}
+            scroll={{ x: 1000 }}
             style={{
               borderRadius: "8px",
               overflow: "hidden",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.09)",
             }}
             expandable={{
-              expandedRowRender: (record) => (
-                <pre
-                  style={{
-                    whiteSpace: "pre-wrap",
-                    wordBreak: "break-word",
-                    margin: 0,
-                    fontSize: "12px",
-                  }}
-                >
-                  {record.more_info
-                    ? JSON.stringify(record.more_info, null, 2)
-                    : "No additional information available"}
-                </pre>
-              ),
-              rowExpandable: (record) =>
-                record.more_info !== null && record.more_info !== undefined,
+              expandedRowRender,
+              rowExpandable: () => true,
             }}
             locale={{
               emptyText: loading

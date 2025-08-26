@@ -79,7 +79,7 @@ const DeviceFullInfo = () => {
     //   key: "id",
     // },
     {
-      title: "image_path",
+      title: "Image path",
       dataIndex: "image_path",
       key: "image_path",
     },
@@ -197,16 +197,16 @@ const DeviceFullInfo = () => {
         }}
       >
         <Descriptions title="Device full information" bordered column={2}>
-          <Descriptions.Item label="ID" span={2}>
+          <Descriptions.Item label="Id" span={2}>
             <span className="monospace">{device.id}</span>
           </Descriptions.Item>
-          <Descriptions.Item label="Host Name">
+          <Descriptions.Item label="Host name">
             {device.host_name}
           </Descriptions.Item>
           <Descriptions.Item label="Status">
             <Tag color={getStatusColor(device.status)}>{device.status}</Tag>
           </Descriptions.Item>
-          <Descriptions.Item label="IP Address">
+          <Descriptions.Item label="IP address">
             <span className="monospace">{device.ip_address}</span>
           </Descriptions.Item>
           <Descriptions.Item label="OS Version">
@@ -215,13 +215,13 @@ const DeviceFullInfo = () => {
           <Descriptions.Item label="BIOS UUID">
             <span className="monospace">{device.bios_uuid}</span>
           </Descriptions.Item>
-          <Descriptions.Item label="Last Seen">
+          <Descriptions.Item label="Last seen">
             {formatDate(device.last_seen)}
           </Descriptions.Item>
-          <Descriptions.Item label="Created At">
+          <Descriptions.Item label="Created date">
             {formatDate(device.created_at)}
           </Descriptions.Item>
-          <Descriptions.Item label="Updated At">
+          <Descriptions.Item label="Updated date">
             {formatDate(device.updated_at)}
           </Descriptions.Item>
         </Descriptions>

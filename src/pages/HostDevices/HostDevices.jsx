@@ -39,7 +39,7 @@ const HostDevices = () => {
     //   ),
     // },
     {
-      title: "Host Name",
+      title: "Host name",
       dataIndex: "host_name",
       key: "host_name",
     },
@@ -65,7 +65,7 @@ const HostDevices = () => {
   return (
     <div style={{ padding: "24px", background: "#f5f5f5", minHeight: "100vh" }}>
       <Card
-        title="Host Devices"
+        title="Host devices"
         extra={
           <Button
             icon={<ReloadOutlined />}

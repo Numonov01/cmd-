@@ -257,6 +257,12 @@ function CustomMapIpAddress() {
                           {item.count} connections
                         </Tag>
                       )}
+                      <Tag
+                        color={item.direction === "Outbound" ? "red" : "green"}
+                        style={{ marginLeft: 8 }}
+                      >
+                        {item.direction}
+                      </Tag>
                     </div>
                   }
                   description={
@@ -462,7 +468,7 @@ function CustomMapIpAddress() {
                     }}
                   >
                     <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
-                      <strong>Connection Created:</strong>{" "}
+                      <strong>Created data:</strong>{" "}
                       {new Date(
                         selectedConnection.application.created_at
                       ).toLocaleString()}

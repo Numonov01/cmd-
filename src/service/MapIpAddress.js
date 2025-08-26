@@ -85,7 +85,10 @@ const useConnectionMapIpAddress = () => {
       const processConnection = async (conn, index) => {
         try {
           const localInfo = await ipLookupOnline(conn.application?.ip_address);
-          const remoteInfo = await ipLookupOnline(conn.remote_address);
+
+          // remote_address ichidan faqat IP ni ajratib olish (portni tashlab yuborish)
+          const remoteIp = conn.remote_address?.split(":")[0] || null;
+          const remoteInfo = await ipLookupOnline(remoteIp);
 
           // Update only this specific connection
           setMaps((prevMaps) =>
