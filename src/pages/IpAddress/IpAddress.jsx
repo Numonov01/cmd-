@@ -409,54 +409,6 @@ function CustomMapIpAddress() {
                   {selectedConnection.application?.host || "Unknown"}
                 </p>
 
-                {/* Application Data Traffic */}
-                {/* {selectedConnection.application && (
-                  <>
-                    <Divider orientation="left" style={{ margin: "12px 0" }}>
-                      Data Traffic
-                    </Divider>
-                    <Row gutter={16} style={{ marginBottom: 16 }}>
-                      <Col span={12}>
-                        <Card
-                          size="small"
-                          style={{ textAlign: "center", background: "#f6ffed" }}
-                        >
-                          <UploadOutlined
-                            style={{
-                              color: "#52c41a",
-                              fontSize: "18px",
-                              marginBottom: 8,
-                            }}
-                          />
-                          <div style={{ fontWeight: "bold" }}>Sent</div>
-                          <div>
-                            {formatBytes(selectedConnection.application.sent)}
-                          </div>
-                        </Card>
-                      </Col>
-                      <Col span={12}>
-                        <Card
-                          size="small"
-                          style={{ textAlign: "center", background: "#e6f7ff" }}
-                        >
-                          <DownloadOutlined
-                            style={{
-                              color: "#1890ff",
-                              fontSize: "18px",
-                              marginBottom: 8,
-                            }}
-                          />
-                          <div style={{ fontWeight: "bold" }}>Received</div>
-                          <div>
-                            {formatBytes(
-                              selectedConnection.application.received
-                            )}
-                          </div>
-                        </Card>
-                      </Col>
-                    </Row>
-                  </>
-                )} */}
                 {/* Connection Created Time */}
                 {selectedConnection.application && (
                   <div
