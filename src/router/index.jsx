@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Tom from "../pages/User/Tom";
 import TeamOne from "./../pages/Team/TeamOne/TeamOne";
 import TeamTwo from "./../pages/Team/TeamTwo/TeamTwo";
@@ -17,6 +17,7 @@ import CustomMapIpAddress from "../pages/IpAddress/IpAddress";
 function Router() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/ipaddress" replace />} />
       <Route path="/user/:id" element={<Tom />} />
       {/* <Route path="/map" element={<CustomMap />} /> */}
       <Route path="/ipaddress" element={<CustomMapIpAddress />} />

@@ -22,6 +22,9 @@ import {
   ReloadOutlined,
   UploadOutlined,
   DownloadOutlined,
+  InfoCircleOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import useHostDevices from "../../service/HostDevices";
 import useConnectionMapIpAddress from "../../service/MapIpAddress";
@@ -41,6 +44,8 @@ function CustomMapIpAddress() {
   } = useConnectionMapIpAddress();
   const { loading: devicesLoading } = useHostDevices();
   const [selectedConnection, setSelectedConnection] = useState(null);
+  const [showConnectionDetails, setShowConnectionDetails] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Filter out connections that are still loading or don't have valid coordinates
   const validConnections = useMemo(() => {
@@ -169,171 +174,209 @@ function CustomMapIpAddress() {
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Sidebar */}
-      <div
-        style={{
-          width: "30%",
-          padding: "16px",
-          overflowY: "auto",
-          boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      {!sidebarCollapsed && (
         <div
           style={{
+            width: "30%",
+            padding: "16px",
+            overflowY: "auto",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 16,
+            flexDirection: "column",
           }}
         >
-          <Typography.Title level={4} style={{ margin: 0 }}>
-            Connections List
-            {partialLoading && (
-              <div
-                style={{ fontSize: 12, color: "#666", fontWeight: "normal" }}
-              >
-                Loading... ({loadedCount}/{totalCount})
-              </div>
-            )}
-          </Typography.Title>
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={refresh}
-            loading={partialLoading}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 16,
+            }}
           >
-            Refresh
-          </Button>
-        </div>
-
-        <List
-          itemLayout="horizontal"
-          dataSource={maps}
-          style={{ flex: 1 }}
-          renderItem={(item, index) => (
-            <List.Item
-              onClick={() => setSelectedConnection({ ...item, id: item.id })}
-              style={{
-                cursor: "pointer",
-                backgroundColor:
-                  selectedConnection && selectedConnection.id === item.id
-                    ? "#e6f7ff"
-                    : "white",
-                padding: "8px",
-                borderRadius: "4px",
-                marginBottom: "8px",
-                opacity: item.more_info.loading ? 0.6 : 1,
-              }}
-            >
-              {item.more_info.loading ? (
-                <List.Item.Meta
-                  title={
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <Spin size="small" style={{ marginRight: 8 }} />
-                      <span>Connection {index + 1} (Loading...)</span>
-                      {item.count > 1 && (
-                        <Tag color="blue" style={{ marginLeft: 8 }}>
-                          {item.count} connections
-                        </Tag>
-                      )}
-                    </div>
-                  }
-                  description={
-                    <Skeleton
-                      active
-                      paragraph={{ rows: 2 }}
-                      title={false}
-                      size="small"
-                    />
-                  }
-                />
-              ) : (
-                <List.Item.Meta
-                  title={
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <span>{item.application.name}</span>
-                      {item.count > 1 && (
-                        <Tag color="blue" style={{ marginLeft: 8 }}>
-                          {item.count} connections
-                        </Tag>
-                      )}
-                      <Tag
-                        color={item.direction === "Outbound" ? "red" : "green"}
-                        style={{ marginLeft: 8 }}
-                      >
-                        {item.direction}
-                      </Tag>
-                    </div>
-                  }
-                  description={
-                    <>
-                      <div>
-                        <strong>From:</strong>{" "}
-                        {item.more_info?.local_address?.city || "Unknown"},{" "}
-                        {item.more_info?.local_address?.country || "Unknown"}
-                      </div>
-                      <div>
-                        <strong>To:</strong>{" "}
-                        {item.more_info?.remote_address?.city || "Unknown"},{" "}
-                        {item.more_info?.remote_address?.country || "Unknown"}
-                      </div>
-                      <div>
-                        <strong>Host:</strong>{" "}
-                        {item.application?.host || "Unknown"}
-                      </div>
-                      {item.application && (
-                        <div style={{ marginTop: 8 }}>
-                          <Row gutter={8}>
-                            <Col span={12}>
-                              <UploadOutlined
-                                style={{ color: "#52c41a", marginRight: 4 }}
-                              />
-                              <small>
-                                {formatBytes(item.application.sent)} sent
-                              </small>
-                            </Col>
-                            <Col span={12}>
-                              <DownloadOutlined
-                                style={{ color: "#1890ff", marginRight: 4 }}
-                              />
-                              <small>
-                                {formatBytes(item.application.received)}{" "}
-                                received
-                              </small>
-                            </Col>
-                          </Row>
-                        </div>
-                      )}
-                    </>
-                  }
-                />
+            <Typography.Title level={4} style={{ margin: 0 }}>
+              Connections List
+              {partialLoading && (
+                <div
+                  style={{ fontSize: 12, color: "#666", fontWeight: "normal" }}
+                >
+                  Loading... ({loadedCount}/{totalCount})
+                </div>
               )}
-            </List.Item>
-          )}
-        />
+            </Typography.Title>
+            <div>
+              <Button
+                icon={<ReloadOutlined />}
+                onClick={refresh}
+                loading={partialLoading}
+                style={{ marginRight: 8 }}
+              >
+                Refresh
+              </Button>
+              <Button
+                icon={<MenuFoldOutlined />}
+                onClick={() => setSidebarCollapsed(true)}
+                type="text"
+              />
+            </div>
+          </div>
 
-        {/* Pagination */}
+          <List
+            itemLayout="horizontal"
+            dataSource={maps}
+            style={{ flex: 1 }}
+            renderItem={(item, index) => (
+              <List.Item
+                onClick={() => setSelectedConnection({ ...item, id: item.id })}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor:
+                    selectedConnection && selectedConnection.id === item.id
+                      ? "#e6f7ff"
+                      : "white",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  marginBottom: "8px",
+                  opacity: item.more_info.loading ? 0.6 : 1,
+                }}
+              >
+                {item.more_info.loading ? (
+                  <List.Item.Meta
+                    title={
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <Spin size="small" style={{ marginRight: 8 }} />
+                        <span>Connection {index + 1} (Loading...)</span>
+                        {item.count > 1 && (
+                          <Tag color="blue" style={{ marginLeft: 8 }}>
+                            {item.count} connections
+                          </Tag>
+                        )}
+                      </div>
+                    }
+                    description={
+                      <Skeleton
+                        active
+                        paragraph={{ rows: 2 }}
+                        title={false}
+                        size="small"
+                      />
+                    }
+                  />
+                ) : (
+                  <List.Item.Meta
+                    title={
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <span>{item.application.name}</span>
+                        {item.count > 1 && (
+                          <Tag color="blue" style={{ marginLeft: 8 }}>
+                            {item.count} connections
+                          </Tag>
+                        )}
+                        <Tag
+                          color={
+                            item.direction === "Outbound" ? "red" : "green"
+                          }
+                          style={{ marginLeft: 8 }}
+                        >
+                          {item.direction}
+                        </Tag>
+                      </div>
+                    }
+                    description={
+                      <>
+                        <div>
+                          <strong>From:</strong>{" "}
+                          {item.more_info?.local_address?.city || "Unknown"},{" "}
+                          {item.more_info?.local_address?.country || "Unknown"}
+                        </div>
+                        <div>
+                          <strong>To:</strong>{" "}
+                          {item.more_info?.remote_address?.city || "Unknown"},{" "}
+                          {item.more_info?.remote_address?.country || "Unknown"}
+                        </div>
+                        <div>
+                          <strong>Host:</strong>{" "}
+                          {item.application?.host || "Unknown"}
+                        </div>
+                        {item.application && (
+                          <div style={{ marginTop: 8 }}>
+                            <Row gutter={8}>
+                              <Col span={12}>
+                                <UploadOutlined
+                                  style={{ color: "#52c41a", marginRight: 4 }}
+                                />
+                                <small>
+                                  {formatBytes(item.application.sent)} sent
+                                </small>
+                              </Col>
+                              <Col span={12}>
+                                <DownloadOutlined
+                                  style={{ color: "#1890ff", marginRight: 4 }}
+                                />
+                                <small>
+                                  {formatBytes(item.application.received)}{" "}
+                                  received
+                                </small>
+                              </Col>
+                            </Row>
+                          </div>
+                        )}
+                      </>
+                    }
+                  />
+                )}
+              </List.Item>
+            )}
+          />
+
+          {/* Pagination */}
+          <div
+            style={{
+              marginTop: "auto",
+              padding: "16px 0",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Pagination
+              current={pagination.currentPage}
+              total={pagination.count}
+              pageSize={10}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+              disabled={partialLoading}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Collapsed sidebar button */}
+      {sidebarCollapsed && (
         <div
           style={{
-            marginTop: "auto",
-            padding: "16px 0",
+            width: "50px",
             display: "flex",
             justifyContent: "center",
+            alignItems: "flex-start",
+            paddingTop: "20px",
+            boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
           }}
         >
-          <Pagination
-            current={pagination.currentPage}
-            total={pagination.count}
-            pageSize={10}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            disabled={partialLoading}
+          <Button
+            icon={<MenuUnfoldOutlined />}
+            onClick={() => setSidebarCollapsed(false)}
+            type="text"
+            size="large"
           />
         </div>
-      </div>
+      )}
 
       {/* Map */}
-      <div style={{ width: "70%", position: "relative" }}>
+      <div
+        style={{
+          width: sidebarCollapsed ? "calc(100% - 50px)" : "70%",
+          position: "relative",
+        }}
+      >
         <DeckGL
           initialViewState={viewState}
           controller={true}
@@ -370,7 +413,7 @@ function CustomMapIpAddress() {
         {/* Details Card */}
         {selectedConnection && (
           <Card
-            title="Connection Details"
+            title={`Host: ${selectedConnection.application?.host || "Unknown"}`}
             bordered={false}
             style={{
               width: 380,
@@ -396,41 +439,8 @@ function CustomMapIpAddress() {
               </div>
             ) : (
               <>
-                {selectedConnection.count > 1 && (
-                  <div style={{ marginBottom: 16 }}>
-                    <Tag color="blue">
-                      Represents {selectedConnection.count} connections
-                    </Tag>
-                  </div>
-                )}
-
-                <p>
-                  <strong>Host:</strong>{" "}
-                  {selectedConnection.application?.host || "Unknown"}
-                </p>
-
-                {/* Connection Created Time */}
-                {selectedConnection.application && (
-                  <div
-                    style={{
-                      marginBottom: 16,
-                      padding: 8,
-                      background: "#fafafa",
-                      borderRadius: 4,
-                    }}
-                  >
-                    <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
-                      <strong>Created data:</strong>{" "}
-                      {new Date(
-                        selectedConnection.application.created_at
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                )}
-                <Divider orientation="left" style={{ margin: "12px 0" }}>
-                  Local Address
-                </Divider>
-                <p>
+                <Divider orientation="left">Local Address</Divider>
+                <p style={{ marginBottom: 8 }}>
                   <strong>From:</strong>{" "}
                   {selectedConnection.more_info?.local_address?.city ||
                     "Unknown"}
@@ -438,23 +448,21 @@ function CustomMapIpAddress() {
                   {selectedConnection.more_info?.local_address?.country ||
                     "Unknown"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 8 }}>
                   <strong>IP:</strong>{" "}
                   {selectedConnection.more_info?.local_address?.ip || "N/A"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 8 }}>
                   <strong>ISP:</strong>{" "}
                   {selectedConnection.more_info?.local_address?.isp || "N/A"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 8 }}>
                   <strong>ASN:</strong>{" "}
                   {selectedConnection.more_info?.local_address?.asn || "N/A"}
                 </p>
 
-                <Divider orientation="left" style={{ margin: "12px 0" }}>
-                  Remote Address
-                </Divider>
-                <p>
+                <Divider orientation="left">Remote Address</Divider>
+                <p style={{ marginBottom: 8 }}>
                   <strong>To:</strong>{" "}
                   {selectedConnection.more_info?.remote_address?.city ||
                     "Unknown"}
@@ -462,19 +470,67 @@ function CustomMapIpAddress() {
                   {selectedConnection.more_info?.remote_address?.country ||
                     "Unknown"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 8 }}>
                   <strong>IP:</strong>{" "}
                   {selectedConnection.more_info?.remote_address?.ip || "N/A"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 8 }}>
                   <strong>ISP:</strong>{" "}
                   {selectedConnection.more_info?.remote_address?.isp || "N/A"}
                 </p>
-                <p>
+                <p style={{ marginBottom: 0 }}>
                   <strong>ASN:</strong>{" "}
                   {selectedConnection.more_info?.remote_address?.asn || "N/A"}
                 </p>
               </>
+            )}
+
+            <InfoCircleOutlined
+              onClick={() => setShowConnectionDetails(!showConnectionDetails)}
+              style={{
+                marginBottom: 16,
+                cursor: "pointer",
+                color: showConnectionDetails ? "#1890ff" : "#e41414ff",
+              }}
+            />
+
+            {/* Connection Details Content */}
+            {showConnectionDetails && selectedConnection.application && (
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: 12,
+                  background: "#fafafa",
+                  borderRadius: 4,
+                  border: "1px solid #e8e8e8",
+                }}
+              >
+                <p
+                  style={{
+                    margin: "0 0 8px 0",
+                    fontSize: "12px",
+                    color: "#666",
+                  }}
+                >
+                  <strong>Created Date:</strong>{" "}
+                  {new Date(
+                    selectedConnection.application.created_at
+                  ).toLocaleString()}
+                </p>
+                <p
+                  style={{
+                    margin: "0 0 8px 0",
+                    fontSize: "12px",
+                    color: "#666",
+                  }}
+                >
+                  <strong>Image Path:</strong>{" "}
+                  {selectedConnection.application.image_path}
+                </p>
+                <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
+                  <strong>PID:</strong> {selectedConnection.application.pid}
+                </p>
+              </div>
             )}
           </Card>
         )}
