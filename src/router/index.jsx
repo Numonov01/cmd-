@@ -6,7 +6,7 @@ import FireWall from "../pages/Firewall/FireWall";
 import Files from "./../pages/Files/Files";
 import HostDevices from "../pages/HostDevices/HostDevices";
 import DeviceFullInfo from "../pages/HostDevices/DeviceFull";
-import AgentLogs from "../pages/Logs/Logs";
+// import AgentLogs from "../pages/Logs/Logs";
 import Applications from "../pages/Applications/Applications";
 import ApplicationConnections from "../pages/HostDevices/ApplicationConnections";
 import CreateFirewallRule from "../pages/Firewall/CreateFirewallRule";
@@ -24,7 +24,7 @@ function Router() {
       <Route path="/devices" element={<HostDevices />} />
       <Route path="/devices/:id" element={<DeviceFullInfo />} />
       <Route path="/connections/:id" element={<ApplicationConnections />} />
-      <Route path="/logs" element={<AgentLogs />} />
+      {/* <Route path="/logs" element={<AgentLogs />} /> */}
       <Route path="/applications" element={<Applications />} />
       <Route path="/TeamOne" element={<TeamOne />} />
       <Route path="/TeamTwo" element={<TeamTwo />} />

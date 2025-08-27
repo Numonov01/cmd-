@@ -4,21 +4,21 @@ import axios from "axios";
 
 async function ipLookupOnline(ip) {
   if (!ip) return null;
-  const url = `http://ip-api.com/json/${ip}`;
+  const url = `https://ipwhois.app/json/${ip}`;
   try {
     const response = await fetch(url);
     const data = await response.json();
-    if (data.status !== "success") return null;
-
+    if (response.status !== 200) return null;
     return {
       ip,
-      asn: data.as,
+      asn: data.asn,
       isp: data.isp,
       country: data.country,
-      region: data.regionName,
+      region: data.region,
       city: data.city,
-      latitude: data.lat,
-      longitude: data.lon,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      country_flag: data.country_flag
     };
   } catch (error) {
     console.error("IP lookup failed:", error);

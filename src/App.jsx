@@ -34,7 +34,7 @@ const items = [
 
   getItem(<Link to={"/devices"}>Host Devices</Link>, "4", <DesktopOutlined />),
   getItem(<Link to={"/logs"}>Agent Logs</Link>, "5", <OrderedListOutlined />),
-  getItem("Friwall", "firewall", <FireFilled />, [
+  getItem("Firewall", "firewall", <FireFilled />, [
     getItem(
       <Link to={"/firewall"}>Firewall list</Link>,
       "3",
