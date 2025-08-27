@@ -11,7 +11,7 @@ import Applications from "../pages/Applications/Applications";
 import ApplicationConnections from "../pages/HostDevices/ApplicationConnections";
 import CreateFirewallRule from "../pages/Firewall/CreateFirewallRule";
 import CustomMapIpAddress from "../pages/IpAddress/IpAddress";
-import { AgentLogs } from "./../pages/Logs/Logs";
+// import { AgentLogs } from "./../pages/Logs/Logs";
 // import CustomMap from "../pages/Map/Map";
 
 function Router() {
