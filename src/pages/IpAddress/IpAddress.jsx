@@ -251,7 +251,7 @@ function CustomMapIpAddress() {
                 <List.Item.Meta
                   title={
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <span>Connection {index + 1}</span>
+                      <span>{item.application.name}</span>
                       {item.count > 1 && (
                         <Tag color="blue" style={{ marginLeft: 8 }}>
                           {item.count} connections
