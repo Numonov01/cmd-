@@ -44,7 +44,7 @@ const HostDevices = () => {
       key: "host_name",
     },
     {
-      title: "IP Address",
+      title: "IP address",
       dataIndex: "ip_address",
       key: "ip_address",
       render: (ip) => <span className="monospace">{ip}</span>,
@@ -56,7 +56,7 @@ const HostDevices = () => {
       render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
     },
     {
-      title: "OS Version",
+      title: "OS version",
       dataIndex: "os_version",
       key: "os_version",
     },

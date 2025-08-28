@@ -194,7 +194,7 @@ function CustomMapIpAddress() {
             }}
           >
             <Typography.Title level={4} style={{ margin: 0 }}>
-              Connections List
+              Connections list
               {partialLoading && (
                 <div
                   style={{ fontSize: 12, color: "#666", fontWeight: "normal" }}

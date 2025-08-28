@@ -67,7 +67,7 @@ const Applications = () => {
       render: (received) => (received / 1024).toFixed(2) + " KB",
     },
     {
-      title: "Created At",
+      title: "Created date",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => formatDate(date),

@@ -241,7 +241,7 @@ const DeviceFullInfo = () => {
                       size="small"
                       style={{ marginRight: "8px" }}
                     >
-                      Refresh Applications
+                      Refresh applications
                     </Button>
                     <Button size="small" onClick={handleHideApplications}>
                       Hide
@@ -252,7 +252,7 @@ const DeviceFullInfo = () => {
             >
               {!showApplications ? (
                 <Button type="primary" onClick={handleShowApplications}>
-                  Show Host Applications
+                  Show host applications
                 </Button>
               ) : (
                 <div>
