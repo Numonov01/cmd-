@@ -1,6 +1,6 @@
 # Firewall Dashboard
 
-![Firewall Dashboard Overview](./assets/dashboard-overview.png)
+![Firewall Dashboard Overview](public/firewall.png)
 
 Firewall Dashboard is a React-based web application designed to manage network devices, applications, and firewall rules.
 
@@ -11,10 +11,6 @@ Firewall Dashboard is a React-based web application designed to manage network d
 - **Applications**: Monitor installed applications on devices.
 - **Patch Management**: Manage and view patch status for devices.
 - **IP Address Map**: Visualize network connections on an interactive map.
-- **Files**: View user files.
-- **Team**: Manage team members and users.
-
-![Firewall Rules Example](public/firewall.png)
 
 ## Getting Started
 
