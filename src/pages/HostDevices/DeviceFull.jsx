@@ -64,6 +64,7 @@ const DeviceFullInfo = () => {
   const handleHideApplications = () => {
     setShowApplications(false);
   };
+  // const { Text } = Typography;
 
   // Define columns for the applications table
   const applicationColumns = [
@@ -82,6 +83,11 @@ const DeviceFullInfo = () => {
       title: "Image path",
       dataIndex: "image_path",
       key: "image_path",
+      // render: (image_path) => (
+      //   <Text ellipsis={{ tooltip: image_path }}>
+      //     {image_path.substring(0, 100)}...
+      //   </Text>
+      // ),
     },
     {
       title: "Name",
