@@ -1,8 +1,6 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 import { Empty } from "antd";
 
-function TeamTwo() {
+function Dashboard() {
   return (
     <div
       style={{
@@ -17,4 +15,4 @@ function TeamTwo() {
   );
 }
 
-export default TeamTwo;
+export default Dashboard;

@@ -3,13 +3,6 @@ import { Layout, Menu, Avatar, Dropdown } from "antd";
 import {
   DesktopOutlined,
   FileOutlined,
-  FireFilled,
-  HeatMapOutlined,
-  OrderedListOutlined,
-  PaperClipOutlined,
-  PartitionOutlined,
-  PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -26,37 +19,15 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem(<Link to={"/devices"}>Host Devices</Link>, "4", <DesktopOutlined />),
-  getItem("Firewall", "firewall", <FireFilled />, [
-    getItem(<Link to={"/ipaddress"}>Map</Link>, "2", <HeatMapOutlined />),
-    getItem(
-      <Link to={"/firewall"}>Firewall list</Link>,
-      "6",
-      <OrderedListOutlined />
-    ),
+  getItem(<Link to={"/dashboard"}>Dashboard</Link>, "1", <DesktopOutlined />),
 
-    getItem(
-      <Link to={"/applications"}>Applications</Link>,
-      "3",
-      <PieChartOutlined />
-    ),
+  getItem(<Link to={"/files"}>Files</Link>, "2", <FileOutlined />),
+
+  getItem("User", "sub1", <UserOutlined />, [
+    getItem(<Link to={"/user/tom"}>Tom</Link>, "3"),
+    getItem(<Link to={"/user/bill"}>Bill</Link>, "4"),
+    getItem(<Link to={"/user/alex"}>Alex</Link>, "5"),
   ]),
-
-  getItem("Patch management", "patchmanagement", <PartitionOutlined />, [
-    getItem(
-      <Link to={"/patchmanagement"}>Patch management</Link>,
-      "9",
-      <PaperClipOutlined />
-    ),
-    getItem(<Link to={"/TeamTwo"}>TeamTwo</Link>, "10", <TeamOutlined />),
-  ]),
-  getItem(<Link to={"/Files"}>Files</Link>, "11", <FileOutlined />),
-
-  // getItem("User", "sub1", <UserOutlined />, [
-  //   getItem(<Link to={"/user/Tom"}>Tom</Link>, "3"),
-  //   getItem(<Link to={"/user/Bill"}>Bill</Link>, "4"),
-  //   getItem(<Link to={"/user/Alex"}>Alex</Link>, "5"),
-  // ]),
 ];
 
 const App = () => {
@@ -162,7 +133,7 @@ const App = () => {
             height: 50,
           }}
         >
-          Firewall ©{new Date().getFullYear()}
+          CMD ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>

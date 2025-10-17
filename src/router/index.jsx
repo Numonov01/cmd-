@@ -1,35 +1,15 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Tom from "../pages/User/Tom";
-import TeamOne from "./../pages/Team/TeamOne/TeamOne";
-import TeamTwo from "./../pages/Team/TeamTwo/TeamTwo";
-import FireWall from "../pages/Firewall/FireWall";
 import Files from "./../pages/Files/Files";
-import HostDevices from "../pages/HostDevices/HostDevices";
-import DeviceFullInfo from "../pages/HostDevices/DeviceFull";
-import Applications from "../pages/Applications/Applications";
-import ApplicationConnections from "../pages/HostDevices/ApplicationConnections";
-import CreateFirewallRule from "../pages/Firewall/CreateFirewallRule";
-import CustomMapIpAddress from "../pages/IpAddress/IpAddress";
-import PatchManagement from "../pages/PatchManagement/PatchManagement";
-// import CustomMap from "../pages/Map/Map";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/devices" replace />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/files" element={<Files />} />
       <Route path="/user/:id" element={<Tom />} />
-      {/* <Route path="/map" element={<CustomMap />} /> */}
-      <Route path="/ipaddress" element={<CustomMapIpAddress />} />
-      <Route path="/firewall" element={<FireWall />} />
-      <Route path="/firewall/create" element={<CreateFirewallRule />} />
-      <Route path="/devices" element={<HostDevices />} />
-      <Route path="/devices/:id" element={<DeviceFullInfo />} />
-      <Route path="/connections/:id" element={<ApplicationConnections />} />
-      <Route path="/applications" element={<Applications />} />
-      <Route path="/patchmanagement" element={<PatchManagement />} />
-      <Route path="/TeamOne" element={<TeamOne />} />
-      <Route path="/TeamTwo" element={<TeamTwo />} />
-      <Route path="/Files" element={<Files />} />
     </Routes>
   );
 }
