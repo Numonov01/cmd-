@@ -1,16 +1,6 @@
-# Firewall Dashboard
+# CMD Dashboard testing
 
-![Firewall Dashboard Overview](public/firewall.png)
-
-Firewall Dashboard is a React-based web application designed to manage network devices, applications, and firewall rules.
-
-## Key Features
-
-- **Host Devices**: View all devices on the network, check their status and details.
-- **Firewall Rules**: Create, delete, and edit firewall rules for devices and applications.
-- **Applications**: Monitor installed applications on devices.
-- **Patch Management**: Manage and view patch status for devices.
-- **IP Address Map**: Visualize network connections on an interactive map.
+![ Dashboard Overview](public/cmd_logo.png)
 
 ## Getting Started
 
@@ -20,8 +10,3 @@ Firewall Dashboard is a React-based web application designed to manage network d
    npm install
    npm run dev
    ```
-
-![Firewall Dashboard](public/ex/device.png)
-![Uzbekistan IP Address Map](public/ex/map.png)
-![Device applications](public/ex/app.png)
-![Patch managements](public/ex/patch.png)

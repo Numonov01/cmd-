@@ -96,7 +96,7 @@ const App = () => {
             }}
           >
             <img
-              src="../firewall.png"
+              src="../cmd_logo.png"
               alt="icon"
               style={{
                 width: 55,
@@ -106,7 +106,7 @@ const App = () => {
             {/* <Avatar size={40} style={{ marginRight: 10 }}>
               FW
             </Avatar> */}
-            <h3 className="brand">Firewall</h3>
+            <h3 className="brand">Testing</h3>
           </div>
           <Dropdown overlay={menu} trigger={["click"]}>
             <a
