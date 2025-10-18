@@ -1,6 +1,6 @@
-# CMD Dashboard testing
+# EDR Dashboard testing
 
-![ Dashboard Overview](public/cmd_logo.png)
+![ Dashboard Overview](public/edr_logo.png)
 
 ## Getting Started
 

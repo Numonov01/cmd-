@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Layout, Menu, Avatar, Dropdown } from "antd";
+import { Layout, Menu, Avatar, Dropdown, Spin } from "antd";
 import {
   DesktopOutlined,
   FileOutlined,
   UserOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Router from "./router";
+import { useAuth } from "./context/AuthContext";
+
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -20,9 +23,7 @@ function getItem(label, key, icon, children) {
 
 const items = [
   getItem(<Link to={"/dashboard"}>Dashboard</Link>, "1", <DesktopOutlined />),
-
   getItem(<Link to={"/files"}>Files</Link>, "2", <FileOutlined />),
-
   getItem("User", "sub1", <UserOutlined />, [
     getItem(<Link to={"/user/tom"}>Tom</Link>, "3"),
     getItem(<Link to={"/user/bill"}>Bill</Link>, "4"),
@@ -32,45 +33,58 @@ const items = [
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { user, logout, loading } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const menu = (
     <Menu>
-      <Menu.Item key="0">
-        <Link to="/user/Tom">
-          <UserOutlined />
-          Profile
-        </Link>
+      <Menu.Item key="0" icon={<UserOutlined />}>
+        <Link to="/user/tom">Profile</Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="1">
-        <Link to="/logout">
-          <UserOutlined />
-          Logout
-        </Link>
+      <Menu.Item 
+        key="1" 
+        icon={<LogoutOutlined />} 
+        onClick={handleLogout}
+      >
+        Logout
       </Menu.Item>
     </Menu>
   );
 
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Router />;
+  }
+
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{
-          background: "white",
-        }}
+        style={{ background: "white" }}
       >
         <div className="demo-logo-vertical" />
         <Menu
           theme="light"
           defaultSelectedKeys={["1"]}
           mode="inline"
-          style={{ position: "sticky", top: 0 }}
           items={items}
         />
       </Sider>
@@ -78,65 +92,44 @@ const App = () => {
       <Layout>
         <Header
           style={{
-            position: "sticky",
-            top: 0,
-            zIndex: "1",
-            width: "100%",
-            background: "white", //Nav
+            padding: "0 20px",
+            background: "white",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "0 20px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center" }}>
             <img
-              src="../cmd_logo.png"
+              src="../edr_logo.png"
               alt="icon"
-              style={{
-                width: 55,
-                marginRight: 10,
-              }}
+              style={{ width: 55, marginRight: 10 }}
             />
-            {/* <Avatar size={40} style={{ marginRight: 10 }}>
-              FW
-            </Avatar> */}
-            <h3 className="brand">Testing</h3>
+            <h3 style={{ margin: 0 }}>Testing</h3>
           </div>
-          <Dropdown overlay={menu} trigger={["click"]}>
-            <a
-              className="ant-dropdown-link"
-              onClick={(e) => e.preventDefault()}
-              href="/"
-              style={{
-                color: "black",
-                fontSize: 18,
-              }}
-            >
-              <Avatar src="../Boy.png" size={50} />
-              {/* Profile */}
-            </a>
-          </Dropdown>
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <a onClick={(e) => e.preventDefault()} href="/">
+                <Avatar src="../Boy.png" size={50} />
+              </a>
+            </Dropdown>
         </Header>
-        <Content style={{ background: "#EBEDF0", borderRadius: 8 }}>
-          <Router />
+        <Content style={{ margin: '16px' }}>
+          <div style={{ padding: 24, background: "white", borderRadius: 8 }}>
+            <Router />
+          </div>
         </Content>
-        <Footer
+         <Footer
           style={{
             textAlign: "center",
             background: "#fff",
             height: 50,
           }}
         >
-          CMD ©{new Date().getFullYear()}
+          EDR ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>
   );
 };
+
 export default App;
