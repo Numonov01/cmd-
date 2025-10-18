@@ -79,7 +79,7 @@ const Login = () => {
         </Form>
 
         <div style={{ marginTop: 16, textAlign: 'center' }}>
-          <p><strong>Demo Credentials:</strong></p>
+          <p><strong>Demo credentials:</strong></p>
           <p>Username: admin</p>
           <p>Password: 123qwe</p> 
         </div>

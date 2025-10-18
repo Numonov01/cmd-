@@ -10,6 +10,7 @@ function Files() {
         height: "100vh",
       }}
     >
+      files
       <Empty />
     </div>
   );

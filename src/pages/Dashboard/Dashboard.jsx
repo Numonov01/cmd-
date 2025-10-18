@@ -10,6 +10,7 @@ function Dashboard() {
         height: "100vh",
       }}
     >
+      dashboard
       <Empty />
     </div>
   );
